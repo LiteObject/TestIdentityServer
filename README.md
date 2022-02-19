@@ -36,13 +36,13 @@ An access token allows access to an API resource. Clients request access tokens 
 ---
 
 ```mermaid
-
+%%{init: {'theme':'base','themeVariables': { 'primaryColor': '#008080'}}}%%
 graph TD
     A[Client] -->|get token from Identity Server| B(Identity Server)
     B --> C{checks credentials}
     C -->D[OK with token] 
     C -->E[Return Error]
-    A[Client] -->|calls api with jwt token| F(API)
+    A[Client] -->|calls api with jwt token| F(Web API)
     F --> G{checks jwt token}
     G -->I[200 with claims]
     G -->J[401 Unauthorized]

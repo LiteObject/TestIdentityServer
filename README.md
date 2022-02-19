@@ -36,7 +36,7 @@ An access token allows access to an API resource. Clients request access tokens 
 ---
 
 ```mermaid
-%%{init: {'theme':'base','themeVariables': { 'primaryColor': '#008080'}}}%%
+%%{init: {'theme':'base','themeVariables': { 'primaryColor': '#008080' }}}%%
 graph TD
     A[Client] -->|get token from Identity Server| B(Identity Server)
     B --> C{checks credentials}
@@ -50,10 +50,8 @@ graph TD
 ```
 ---
 ```mermaid
-sequenceDiagram
-    participant Client
-    participant IdentityServer    
-    participant Api
+%%{init: {'securityLevel': 'loose', 'theme':'base'}}%%
+sequenceDiagram        
     Client->>IdentityServer: 1. Can I get a JWT token?
     IdentityServer-->>Client: 2. Checks client credentials
     Note right of IdentityServer: Check client credentials <br/>Provide JWT if matches.        

@@ -1,11 +1,10 @@
 ﻿namespace TestIdentityServer
 {
-    using System.Collections.Generic;
-    using System.Security.Claims;
-
     using IdentityServer4;
     using IdentityServer4.Models;
     using IdentityServer4.Test;
+    using System.Collections.Generic;
+    using System.Security.Claims;
 
     /// <summary>
     /// The in memory configurations.
@@ -48,6 +47,10 @@
                                }
                        };
         }
+
+        public static IEnumerable<ApiScope> ApiScopes =>
+            new ApiScope[]
+            { new ApiScope("api1", "My API") };
 
         /// <summary>
         /// The clients.
@@ -95,7 +98,19 @@
                                    AllowAccessTokensViaBrowser = true,
                                    RedirectUris = new[] { "http://localhost:8406/signin-oidc" },
                                    PostLogoutRedirectUris = new[] { "http://localhost:8406/signout-callback-oidc" }
-                               }
+                               },
+                           new Client {
+                            ClientId = "client",
+                            AllowedGrantTypes = GrantTypes.ClientCredentials,
+                            ClientSecrets = {
+                                new Secret("secret".Sha256())
+                            },
+                            AllowedScopes = {
+                                   IdentityServerConstants.StandardScopes.OpenId,
+                                   IdentityServerConstants.StandardScopes.Profile,
+                                   IdentityServerConstants.StandardScopes.Email,
+                                   "api1" }
+                           }
                        };
         }
 

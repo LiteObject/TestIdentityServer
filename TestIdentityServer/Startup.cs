@@ -1,13 +1,12 @@
 ﻿namespace TestIdentityServer
 {
-    using System.Linq;
-
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using System.Linq;
 
     /// <summary>
     /// The startup.
@@ -47,9 +46,13 @@
                         {
                             loggingBuilder.AddConsole();
                             loggingBuilder.AddDebug();
-                        }).AddIdentityServer().AddDeveloperSigningCredential()
+                        })
+                .AddIdentityServer()
+                .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(InMemoryConfigs.IdentityResources())
-                .AddInMemoryApiResources(InMemoryConfigs.ApiResources()).AddInMemoryClients(InMemoryConfigs.Clients())
+                .AddInMemoryApiResources(InMemoryConfigs.ApiResources())
+                .AddInMemoryClients(InMemoryConfigs.Clients())
+                .AddInMemoryApiScopes(InMemoryConfigs.ApiScopes)
                 .AddTestUsers(InMemoryConfigs.Users().ToList());
         }
 
@@ -78,7 +81,6 @@
             app.UseIdentityServer();
 
             app.UseHttpsRedirection();
-            app.UseMvc();
         }
     }
 }

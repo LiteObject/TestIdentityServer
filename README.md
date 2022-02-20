@@ -53,8 +53,7 @@ graph TD
 %%{init: {'securityLevel': 'loose', 'theme':'base'}}%%
 sequenceDiagram        
     Client->>IdentityServer: 1. Can I get a JWT token?
-    IdentityServer-->>Client: 2. Checks client credentials
-    Note right of IdentityServer: Check client credentials <br/>Provide JWT if matches.        
+    IdentityServer-->>Client: 2. Returns JWT if client credentials are correct    
     Client->>Api: 3. Here's the JWT. Can I access the endpoint?
     Api->>IdentityServer: 4. Is it a validate JWT?
     IdentityServer-->>Api: 5. Yes, it's valid

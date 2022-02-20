@@ -36,7 +36,7 @@ An access token allows access to an API resource. Clients request access tokens 
 ---
 
 ```mermaid
-%%{init: {'theme':'base','themeVariables': { 'primaryColor': '#008080' }}}%%
+%%{init: {'theme':'base','themeVariables': { 'primaryColor': '#fad47a', 'secondaryColor':'#e1e8e8' }}}%%
 graph TD
     A[Client] -->|get token from Identity Server| B(Identity Server)
     B --> C{checks credentials}

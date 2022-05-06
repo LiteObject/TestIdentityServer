@@ -1,17 +1,18 @@
-﻿using IdentityModel.Client;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-
-namespace Demo.Client
+﻿namespace Demo.Client
 {
+    using IdentityModel.Client;
+    using System;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+
     internal class Program
     {
         static async Task Main(string[] args)
         {
-            var client = new HttpClient();
+            using var identityServiceClient = new HttpClient();
 
-            var disco = await client.GetDiscoveryDocumentAsync(
+            // To retrieve the discovery document from IdentityService:
+            var disco = await identityServiceClient.GetDiscoveryDocumentAsync(
                 new DiscoveryDocumentRequest
                 {
                     Address = "https://localhost:5001",
@@ -27,10 +28,10 @@ namespace Demo.Client
                 return;
             }
 
-            var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+            // To retrieve JWT token from IdentityService:
+            var tokenResponse = await identityServiceClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
                 Address = disco.TokenEndpoint,
-
                 ClientId = "client",
                 ClientSecret = "secret",
                 // Scope = "openid"
@@ -41,16 +42,16 @@ namespace Demo.Client
                 Console.WriteLine(tokenResponse.Error);
             }
 
-            Console.WriteLine(tokenResponse.Json);
+            Console.WriteLine($"JWT: {tokenResponse.Json}");
 
-            var apiClient = new HttpClient();
+            using var apiClient = new HttpClient();
             apiClient.SetBearerToken(tokenResponse.AccessToken);
 
             var response = await apiClient.GetAsync("https://localhost:6001/api/identity");
 
             if (!response.IsSuccessStatusCode)
             {
-                Console.WriteLine(response.StatusCode);
+                Console.WriteLine("Respone status code from API: {statusCode}", response.StatusCode);
             }
             else
             {

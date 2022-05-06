@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  identity-server:
+    image: ${DOCKER_REGISTRY-}demo-identity-server
+    build: 
+      context: .
+      dockerfile: Demo.IdentityServer/Dockerfile
+    ports:
+      - '5001:5001'
+    volumes:
+      - ~/.aspnet/https:/https:ro
+      #- ./src/IdentityServer:/root/IdentityServer:cached
+      #- ./src/IdentityServer/certs:/https/
+      #- type: bind
+      #  source: ./certs/aspnetapp-root-cert.cer
+      #  target: /https-root/aspnetapp-root-cert.cer
+    environment:
+      - ASPNETCORE_URLS="https://+;"
+      - ASPNETCORE_HTTPS_PORT=5001
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=SECRETPASSWORD
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp-identity-server.pfx
+
+  web-api:
+    image: ${DOCKER_REGISTRY-}demo-api
+    build: 
+      context: .
+      dockerfile: Demo.Api/Dockerfile
+    ports:
+     - '6001:6001'
+    volumes:
+     - ~/.aspnet/https:/https:ro
+     #- ./src/Api:/root/Api:cached
+     #- ./src/Api/certs:/https/
+     #- type: bind
+     #  source: ./certs/aspnetapp-root-cert.cer
+     #  target: /https-root/aspnetapp-root-cert.cer
+    environment:
+     - ASPNETCORE_URLS="https://+;"
+     - ASPNETCORE_HTTPS_PORT=6001
+     - ASPNETCORE_Kestrel__Certificates__Default__Password=SECRETPASSWORD
+     - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+     #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp-web-api.pfx

@@ -65,9 +65,9 @@
         /// <param name="env">
         /// The env.
         /// </param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.EnvironmentName.ToLower().StartsWith("dev"))
             {
                 app.UseDeveloperExceptionPage();
             }

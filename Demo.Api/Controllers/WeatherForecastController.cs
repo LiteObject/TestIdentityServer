@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace Demo.Api.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
@@ -21,18 +20,36 @@ namespace Demo.Api.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        // The Web API will only accept tokens 1) for users, and 2) having the "access_as_user" scope for this API
-        static readonly string[] scopeRequiredByApi = new string[] { "access_as_user" };
+        static readonly string[] scopeRequiredByApi = new string[] { "demoapi.weatherforecast.read" };
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
         }
 
+        
         [HttpGet]
+        [Authorize("demoapi.weatherforecast.read")]
+        // [RequiredScope(scopeRequiredByApi)]
         public IEnumerable<WeatherForecast> Get()
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
+            // HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
+                        
+            var claims = from c in User.Claims select new { c.Type, c.Value };
+
+            foreach (var c in claims) 
+            { 
+                Console.WriteLine($"{c.Type}, {c.Value}");
+
+                /*
+                 * nbf - stands for not before.
+                 * exp - stands for expiry.
+                 * iss - stands for issuer.
+                 * aud - stands for audience. The resource name in which a client is needed to access.
+                 * client_id - the client id of the client application requesting the token.
+                 * scope - the scope in which a client is allowed to access.
+                 */
+            }
 
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast

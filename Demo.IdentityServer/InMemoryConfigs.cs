@@ -13,6 +13,7 @@
     {
         /// <summary>
         /// The identity resources.
+        /// More: http://docs.identityserver.io/en/latest/reference/identity_resource.html
         /// </summary>
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
@@ -21,13 +22,17 @@
         {
             return new IdentityResource[]
                        {
-                           new IdentityResources.OpenId(), new IdentityResources.Profile(),
-                           new IdentityResources.Phone(), new IdentityResources.Email(), new IdentityResources.Address()
+                           new IdentityResources.OpenId(), 
+                           new IdentityResources.Profile(),
+                           new IdentityResources.Phone(), 
+                           new IdentityResources.Email(), 
+                           new IdentityResources.Address()
                        };
         }
 
         /// <summary>
         /// The API resources.
+        /// More: http://docs.identityserver.io/en/latest/reference/api_resource.html
         /// </summary>
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
@@ -36,29 +41,50 @@
         {
             return new[]
                        {
-                           new ApiResource("TestApp", "My Test Application")
+                            // The API we sih to protect
+                           new ApiResource()
                                {
+                                   Name = "DemoWeatherApi",
+                                   DisplayName = "DemoApi-Weather-Service",
+                                   Description = "This is a demo api to provide weather forecast",
+                                   ApiSecrets = { new Secret("api-secret".Sha256()) },
+                                   /*
+                                    *  List of associated user claims that should be included when this resource is requested.
+                                    */
                                    UserClaims = new[]
-                                                    {
+                                                    {                                       
                                                         ClaimTypes.Email, ClaimTypes.HomePhone, ClaimTypes.MobilePhone,
-                                                        ClaimTypes.OtherPhone, ClaimTypes.Role, "Profile", "CanCreateProfile",
-                                                        "CanViewProfile"
-                                                    }
+                                                        ClaimTypes.OtherPhone, ClaimTypes.Role, "Profile",                                                       
+                                                    },
+
+                                   /*                                    
+                                    * The scope constrains the endpoints to which a client has access, and whether a client 
+                                    * has read or write access to an endpoint. 
+                                    * 
+                                    * Scopes this API resource allows
+                                    */
+                                   Scopes = new[] { "demoapi.weatherforecast.read", "demoapi.weatherforecast.write" }
                                }
                        };
         }
 
+        /// <summary>
+        /// Define API scopes
+        /// </summary>
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
-            { new ApiScope("api1", "My API") };
+            { 
+                new ApiScope("demoapi.weatherforecast.read", "Read Weather API"),
+                new ApiScope("demoapi.weatherforecast.write", "Write Weather API")
+            };        
 
-        /// <summary>
-        /// The clients.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="IEnumerable{T}"/>.
-        /// </returns>
-        public static IEnumerable<Client> Clients()
+    /// <summary>
+    /// The clients.
+    /// </summary>
+    /// <returns>
+    /// The <see cref="IEnumerable{T}"/>.
+    /// </returns>
+    public static IEnumerable<Client> Clients()
         {
             return new[]
                        {
@@ -100,16 +126,23 @@
                                    PostLogoutRedirectUris = new[] { "http://localhost:8406/signout-callback-oidc" }
                                },
                            new Client {
-                            ClientId = "client",
+                            ClientId = "my-console-client",
+                            ClientName = "WeatherForecastClient",
+                            Description = "This client interacts with the Weather API and provides weather forecast",
                             AllowedGrantTypes = GrantTypes.ClientCredentials,
                             ClientSecrets = {
                                 new Secret("secret".Sha256())
                             },
+                            /* 
+                             * Specifies the api scopes that the client is allowed to request. 
+                             */
                             AllowedScopes = {
                                    IdentityServerConstants.StandardScopes.OpenId,
                                    IdentityServerConstants.StandardScopes.Profile,
                                    IdentityServerConstants.StandardScopes.Email,
-                                   "api1" }
+                                   "demoapi.weatherforecast.read",
+                                   "demoapi.weatherforecast.write"
+                               }
                            }
                        };
         }

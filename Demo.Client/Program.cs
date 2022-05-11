@@ -32,22 +32,23 @@
             var tokenResponse = await identityServiceClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
                 Address = disco.TokenEndpoint,
-                ClientId = "client",
+                ClientId = "my-console-client",
                 ClientSecret = "secret",
-                // Scope = "openid"
+                Scope = "demoapi.weatherforecast.read"                
             });
+
+            Console.WriteLine($"JWT: {tokenResponse.Json}");
 
             if (tokenResponse.IsError)
             {
                 Console.WriteLine(tokenResponse.Error);
+                return;
             }
-
-            Console.WriteLine($"JWT: {tokenResponse.Json}");
-
+                        
             using var apiClient = new HttpClient();
             apiClient.SetBearerToken(tokenResponse.AccessToken);
 
-            var response = await apiClient.GetAsync("https://localhost:6001/api/identity");
+            var response = await apiClient.GetAsync("https://localhost:6001/WeatherForecast");
 
             if (!response.IsSuccessStatusCode)
             {

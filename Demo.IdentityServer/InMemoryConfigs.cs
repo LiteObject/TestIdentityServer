@@ -8,6 +8,7 @@
 
     /// <summary>
     /// The in memory configurations.
+    /// https://localhost:5001/.well-known/openid-configuration
     /// </summary>
     public class InMemoryConfigs
     {
@@ -137,9 +138,9 @@
                              * Specifies the api scopes that the client is allowed to request. 
                              */
                             AllowedScopes = {
-                                   IdentityServerConstants.StandardScopes.OpenId,
+                                   /* IdentityServerConstants.StandardScopes.OpenId,
                                    IdentityServerConstants.StandardScopes.Profile,
-                                   IdentityServerConstants.StandardScopes.Email,
+                                   IdentityServerConstants.StandardScopes.Email, */
                                    "demoapi.weatherforecast.read",
                                    "demoapi.weatherforecast.write"
                                }

@@ -60,3 +60,6 @@ sequenceDiagram
     Api-->>Client: 6. Yes, you can access the endpoint
 
 ```
+---
+## Links:
+- [The OAuth 2.0 Authorization Framework - By IETF](https://datatracker.ietf.org/doc/html/rfc6749)

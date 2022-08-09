@@ -83,7 +83,7 @@ namespace Demo.Api
                         ValidIssuer = "https://localhost:5001",
                         // ValidateIssuerSigningKey = true,
                         ValidateAudience = true,
-                        ValidAudiences = new[] { "DemoWeatherApi" }
+                        ValidAudiences = new[] { "DemoWeatherApi" } /* aud maps to ApiResource.Name in IS4 config */
                     };                                        
                 });
             

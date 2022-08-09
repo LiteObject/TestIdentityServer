@@ -51,8 +51,8 @@
                 .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(InMemoryConfigs.IdentityResources())
                 .AddInMemoryApiResources(InMemoryConfigs.ApiResources())
-                .AddInMemoryClients(InMemoryConfigs.Clients())
                 .AddInMemoryApiScopes(InMemoryConfigs.ApiScopes)
+                .AddInMemoryClients(InMemoryConfigs.Clients())                
                 .AddTestUsers(InMemoryConfigs.Users().ToList());
         }
 

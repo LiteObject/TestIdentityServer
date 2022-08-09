@@ -1,5 +1,6 @@
 ﻿namespace TestIdentityServer
 {
+    using IdentityModel;
     using IdentityServer4;
     using IdentityServer4.Models;
     using IdentityServer4.Test;
@@ -8,9 +9,16 @@
 
     /// <summary>
     /// The in memory configurations.
+    /// https://localhost:5001/.well-known/openid-configuration
     /// </summary>
     public class InMemoryConfigs
     {
+        /*
+         * In IdentityServer4 scopes are modelled as resources, which come in two flavors: IDENTITY and API. 
+         * An IDENTITY RESOURCE allows you to model a scope that will return a certain set of claims, while 
+         * an API RESOURCE scope allows you to model access to a protected resource/API.          
+         */
+
         /// <summary>
         /// The identity resources.
         /// More: http://docs.identityserver.io/en/latest/reference/identity_resource.html
@@ -22,16 +30,21 @@
         {
             return new IdentityResource[]
                        {
-                           new IdentityResources.OpenId(), 
+                           // some standard scopes from the OIDC spec
+                           new IdentityResources.OpenId(),
                            new IdentityResources.Profile(),
-                           new IdentityResources.Phone(), 
-                           new IdentityResources.Email(), 
-                           new IdentityResources.Address()
+                           new IdentityResources.Phone(),
+                           new IdentityResources.Email(),
+                           new IdentityResources.Address(),
+
+                           // custom identity resource with some associated claims
+                           new IdentityResource("custom.profile",
+                           userClaims: new[] { JwtClaimTypes.Name, JwtClaimTypes.Email, "location", JwtClaimTypes.Address })
                        };
         }
 
         /// <summary>
-        /// The API resources.
+        /// The API Resource Apis: the protected apis that Clients wants to access
         /// More: http://docs.identityserver.io/en/latest/reference/api_resource.html
         /// </summary>
         /// <returns>
@@ -41,50 +54,81 @@
         {
             return new[]
                        {
-                            // The API we sih to protect
+                        /* new ApiResource("demo.test.api","Test Apis")
+                         * 
+                         * use this for simpler scenarios where you only require one scope per API. 
+                         * In this case, the app.api.weather name will automatically become a scope 
+                         * for the resource.
+                         */
+                           new ApiResource("demo.test.api","Test Apis"),
                            new ApiResource()
-                               {
-                                   Name = "DemoWeatherApi",
-                                   DisplayName = "DemoApi-Weather-Service",
-                                   Description = "This is a demo api to provide weather forecast",
-                                   ApiSecrets = { new Secret("api-secret".Sha256()) },
-                                   /*
-                                    *  List of associated user claims that should be included when this resource is requested.
-                                    */
-                                   UserClaims = new[]
-                                                    {                                       
-                                                        ClaimTypes.Email, ClaimTypes.HomePhone, ClaimTypes.MobilePhone,
-                                                        ClaimTypes.OtherPhone, ClaimTypes.Role, "Profile",                                                       
-                                                    },
+                            {
+                                Name = "DemoWeatherApi",
+                                DisplayName = "DemoApi-Weather-Service",
+                                Description = "This is a demo api to provide weather forecast",
+                                ApiSecrets = { new Secret("api-secret".Sha256()) },
+                                /*
+                                *  List of associated user claims that should be included when this resource is requested.
+                                */
+                                UserClaims = new[]
+                                                {
+                                                    ClaimTypes.Email, ClaimTypes.HomePhone, ClaimTypes.MobilePhone,
+                                                    ClaimTypes.OtherPhone, ClaimTypes.Role, "Profile",
+                                                },
 
-                                   /*                                    
-                                    * The scope constrains the endpoints to which a client has access, and whether a client 
-                                    * has read or write access to an endpoint. 
-                                    * 
-                                    * Scopes this API resource allows
-                                    */
-                                   Scopes = new[] { "demoapi.weatherforecast.read", "demoapi.weatherforecast.write" }
-                               }
+                                /*                                    
+                                * The scope constrains the endpoints to which a client has access, and whether a client 
+                                * has read or write access to an endpoint. 
+                                * 
+                                * Scopes this API resource allows
+                                */
+                                Scopes = new[] { "demoapi.weatherforecast.read", "demoapi.weatherforecast.write" }
+                            },
+                           new ApiResource()
+                           {
+                                Name = "DemoUserApi",
+                                DisplayName = "DemoApi-User-Service",
+                                Description = "This is a demo api to provide user information",
+                                ApiSecrets = { new Secret("api-secret".Sha256()) },
+                                /*
+                                *  List of associated user claims that should be included when this resource is requested.
+                                */
+                                UserClaims = new[]
+                                                {
+                                                    ClaimTypes.Email, ClaimTypes.HomePhone, ClaimTypes.MobilePhone,
+                                                    ClaimTypes.OtherPhone, ClaimTypes.Role, "Profile",
+                                                },
+                                 /*                                    
+                                * The scope constrains the endpoints to which a client has access, and whether a client 
+                                * has read or write access to an endpoint. 
+                                * 
+                                * Scopes this API resource allows
+                                */
+                                Scopes = new[] { "demoapi.user.read", "demoapi.user.write" },
+                           },
                        };
         }
 
         /// <summary>
-        /// Define API scopes
+        /// Define API scopes. Each scopes should be **unique** and that is why 
+        /// it's recommended to define your scopes based on each API unique name.
         /// </summary>
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
-            { 
+            {
                 new ApiScope("demoapi.weatherforecast.read", "Read Weather API"),
-                new ApiScope("demoapi.weatherforecast.write", "Write Weather API")
-            };        
+                new ApiScope("demoapi.weatherforecast.write", "Write Weather API"),
+                new ApiScope("demoapi.user.read", "Write User API"),
+                new ApiScope("demoapi.user.write", "Write User API"),
+            };
 
-    /// <summary>
-    /// The clients.
-    /// </summary>
-    /// <returns>
-    /// The <see cref="IEnumerable{T}"/>.
-    /// </returns>
-    public static IEnumerable<Client> Clients()
+        /// <summary>
+        /// The clients: applications that wants to access the Resource Apis.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="IEnumerable{T}"/>.
+        /// </returns>
+        public static IEnumerable<Client> Clients()
         {
             return new[]
                        {
@@ -108,23 +152,23 @@
                                    //PostLogoutRedirectUris = { "" }                    
                                },
                            new Client
-                               {
-                                   ClientId = "TestApp_implicit",
-                                   ClientSecrets = new[] { new Secret("secret".Sha256()) },
-                                   AllowedGrantTypes = GrantTypes.Implicit,
-                                   AllowedScopes = new[]
-                                                       {
-                                                           IdentityServerConstants.StandardScopes.OpenId,
-                                                           IdentityServerConstants.StandardScopes.Profile,
-                                                           IdentityServerConstants.StandardScopes.Email,
-                                                           IdentityServerConstants.StandardScopes.Phone,
-                                                           IdentityServerConstants.StandardScopes.Email,
-                                                           IdentityServerConstants.StandardScopes.Address
-                                                       },
-                                   AllowAccessTokensViaBrowser = true,
-                                   RedirectUris = new[] { "http://localhost:8406/signin-oidc" },
-                                   PostLogoutRedirectUris = new[] { "http://localhost:8406/signout-callback-oidc" }
-                               },
+                            {
+                                ClientId = "TestApp_implicit",
+                                ClientSecrets = new[] { new Secret("secret".Sha256()) },
+                                AllowedGrantTypes = GrantTypes.Implicit,
+                                AllowedScopes = new[]
+                                                    {
+                                                        IdentityServerConstants.StandardScopes.OpenId,
+                                                        IdentityServerConstants.StandardScopes.Profile,
+                                                        IdentityServerConstants.StandardScopes.Email,
+                                                        IdentityServerConstants.StandardScopes.Phone,
+                                                        IdentityServerConstants.StandardScopes.Email,
+                                                        IdentityServerConstants.StandardScopes.Address
+                                                    },
+                                AllowAccessTokensViaBrowser = true,
+                                RedirectUris = new[] { "http://localhost:8406/signin-oidc" },
+                                PostLogoutRedirectUris = new[] { "http://localhost:8406/signout-callback-oidc" }
+                            },
                            new Client {
                             ClientId = "my-console-client",
                             ClientName = "WeatherForecastClient",
@@ -135,14 +179,15 @@
                             },
                             /* 
                              * Specifies the api scopes that the client is allowed to request. 
-                             */
+                             */                            
+                            // AllowedScopes = { "DemoWeatherApi" }
                             AllowedScopes = {
-                                   IdentityServerConstants.StandardScopes.OpenId,
-                                   IdentityServerConstants.StandardScopes.Profile,
                                    IdentityServerConstants.StandardScopes.Email,
                                    "demoapi.weatherforecast.read",
-                                   "demoapi.weatherforecast.write"
-                               }
+                                   "demoapi.weatherforecast.write",
+                                   "demoapi.user.read",
+                                   "demoapi.user.write"
+                            }
                            }
                        };
         }

@@ -31,14 +31,40 @@ namespace Demo.Api
                 .Build();
 
             // applying global policy
-            services.AddControllers(options => {
+            services.AddControllers(options =>
+            {
                 // Using option #2
                 // options.Filters.Add(new AuthorizeFilter(scopePolicy));
             });
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo.Api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo.Weather.Api", Version = "v1" });
+                
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",                    
+                    Scheme = JwtBearerDefaults.AuthenticationScheme
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type=ReferenceType.SecurityScheme,
+                                Id=JwtBearerDefaults.AuthenticationScheme
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
             });
 
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -47,21 +73,25 @@ namespace Demo.Api
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
-                    options.Authority = "https://localhost:5001";                    
+                    options.Authority = "https://localhost:5001";
                     options.RequireHttpsMetadata = false;
+                    options.IncludeErrorDetails = true;
                     options.TokenValidationParameters = new TokenValidationParameters
-                    {                        
+                    {
+                        ValidateLifetime = true,
                         ValidateIssuer = true,
                         ValidIssuer = "https://localhost:5001",
                         // ValidateIssuerSigningKey = true,
                         ValidateAudience = true,
-                        ValidAudiences = new[] { "DemoWeatherApi" }
-                    };
+                        ValidAudiences = new[] { "DemoWeatherApi" } /* aud maps to ApiResource.Name in IS4 config */
+                    };                                        
                 });
-
+            
             // OPTIONA #2: Named (local) policy to decorate individual controllers and actions ([Authorize("demoapi.weatherforecast.read")])
-            services.AddAuthorization(options => {
-                options.AddPolicy("demoapi.weatherforecast.read", policy => policy.RequireClaim("scope","demoapi.weatherforecast.read"));
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("demoapi.weatherforecast.read", policy => policy.RequireClaim("scope", "demoapi.weatherforecast.read"));
+                options.AddPolicy("demoapi.weatherforecast.write", policy => policy.RequireClaim("scope", "demoapi.weatherforecast.write"));
             });
         }
 

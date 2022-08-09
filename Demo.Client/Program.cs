@@ -44,21 +44,28 @@
                 Console.WriteLine(tokenResponse.Error);
                 return;
             }
-                        
-            using var apiClient = new HttpClient();
-            apiClient.SetBearerToken(tokenResponse.AccessToken);
 
-            var response = await apiClient.GetAsync("https://localhost:6001/WeatherForecast");
+            try
+            {
+                using var apiClient = new HttpClient();
+                apiClient.SetBearerToken(tokenResponse.AccessToken);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                Console.WriteLine("Respone status code from API: {statusCode}", response.StatusCode);
+                var response = await apiClient.GetAsync("https://localhost:6001/WeatherForecast");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Respone status code from API: {statusCode}", response.StatusCode);
+                }
+                else
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(content);
+                }
             }
-            else
+            catch (Exception e)
             {
-                var content = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(content);
-            }
+                Console.Error.WriteLine(e.Message, e);
+            }           
         }
     }
 }

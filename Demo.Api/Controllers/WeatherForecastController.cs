@@ -60,5 +60,14 @@ namespace Demo.Api.Controllers
             })
             .ToArray();
         }
+
+        [HttpPost]
+        [Authorize("demoapi.weatherforecast.write")]
+        public async Task<IActionResult> Post(WeatherForecast payload) 
+        {
+            await Task.Delay(2000);
+            Console.WriteLine($"Created:\n{System.Text.Json.JsonSerializer.Serialize(payload)}");
+            return Created("/", payload);
+        }
     }
 }

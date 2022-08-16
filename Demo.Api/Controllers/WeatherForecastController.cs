@@ -26,10 +26,9 @@ namespace Demo.Api.Controllers
         {
             _logger = logger;
         }
-
-        
+                
         [HttpGet]
-        [Authorize("demoapi.weatherforecast.read")]
+        [Authorize(Policy = "demoapi.weatherforecast.read")]
         // [RequiredScope(scopeRequiredByApi)]
         public IEnumerable<WeatherForecast> Get()
         {
@@ -62,12 +61,19 @@ namespace Demo.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize("demoapi.weatherforecast.write")]
+        [Authorize(Policy = "demoapi.weatherforecast.write")]
         public async Task<IActionResult> Post(WeatherForecast payload) 
         {
             await Task.Delay(2000);
             Console.WriteLine($"Created:\n{System.Text.Json.JsonSerializer.Serialize(payload)}");
             return Created("/", payload);
+        }
+
+        [HttpGet("ping")]
+        [Authorize(Policy = "DisabledAuthOnPort80")]
+        public IActionResult Ping() 
+        {
+            return Ok("I am alive!!!");
         }
     }
 }

@@ -69,7 +69,14 @@ namespace Demo.Api.Controllers
             return Created("/", payload);
         }
 
+        /*
+         * If an authorization policy contains multiple authorization requirements, all requirements must 
+         * pass in order for the policy evaluation to succeed. In other words, multiple authorization 
+         * requirements added to a single authorization policy are treated on an AND basis.
+         */
+
         [HttpGet("ping")]
+        // [Authorize]
         [Authorize(Policy = "DisabledAuthOnPort80")]
         public IActionResult Ping() 
         {

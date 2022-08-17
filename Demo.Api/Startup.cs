@@ -93,7 +93,7 @@ namespace Demo.Api
                 options.AddPolicy("demoapi.weatherforecast.read", policy => policy.RequireClaim("scope", "demoapi.weatherforecast.read"));
                 options.AddPolicy("demoapi.weatherforecast.write", policy => policy.RequireClaim("scope", "demoapi.weatherforecast.write"));
 
-                options.AddPolicy("DisabledAuthOnPort80", builder => builder.AddRequirements(new DisabledAuthRequirement()));
+                options.AddPolicy("DisabledAuthOnPort80", policy => policy.AddRequirements(new DisabledAuthRequirement() { UserAgent = "PostmanRuntime/7.29.2" }));
             });
 
             services.AddHttpContextAccessor();

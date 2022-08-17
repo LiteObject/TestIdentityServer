@@ -52,6 +52,13 @@ namespace Demo.Api
             // In this case, the Resource property is an instance of HttpContext. The context can be used to access the current endpoint
             if (context.Resource is HttpContext httpContext)
             {
+                Console.WriteLine("-------------------HEADERS---------------------");
+                foreach (var h in httpContext.Request.Headers) 
+                {
+                    Console.WriteLine(">>> " + h.Key + ": " + h.Value);
+                }
+                Console.WriteLine("-----------------------------------------------");
+
                 // var actionDescriptor = httpContext.GetEndpoint().Metadata.GetMetadata<ControllerActionDescriptor>();
                 userAgent = httpContext.Request.Headers[Microsoft.Net.Http.Headers.HeaderNames.UserAgent].ToString();
             }

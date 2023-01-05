@@ -7,20 +7,21 @@ namespace Demo.Client
 {
     internal class Program
     {
-        static async Task Main(string[] args)
+        public static async Task Main()
         {
             using HttpClient identityServiceClient = new();
 
-            // To retrieve the discovery document from IdentityService:
-            DiscoveryDocumentResponse disco = await identityServiceClient.GetDiscoveryDocumentAsync(
-                new DiscoveryDocumentRequest
-                {
-                    Address = "https://localhost:5001",
-                    Policy =
+            using DiscoveryDocumentRequest discoveryDocumentRequest = new()
+            {
+                Address = "https://localhost:5001",
+                Policy =
                     {
                         ValidateIssuerName = false
                     },
-                });
+            };
+
+            // To retrieve the discovery document from IdentityService:
+            DiscoveryDocumentResponse disco = await identityServiceClient.GetDiscoveryDocumentAsync(discoveryDocumentRequest);
 
             if (disco.IsError)
             {
@@ -28,14 +29,16 @@ namespace Demo.Client
                 return;
             }
 
-            // To retrieve JWT token from IdentityService:
-            TokenResponse tokenResponse = await identityServiceClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+            using ClientCredentialsTokenRequest clientCredentialsTokenRequest = new()
             {
                 Address = disco.TokenEndpoint,
                 ClientId = "client",
                 ClientSecret = "secret",
                 // Scope = "openid"
-            });
+            };
+
+            // To retrieve JWT token from IdentityService:
+            TokenResponse tokenResponse = await identityServiceClient.RequestClientCredentialsTokenAsync(clientCredentialsTokenRequest);
 
             if (tokenResponse.IsError)
             {
@@ -47,11 +50,12 @@ namespace Demo.Client
             using HttpClient apiClient = new();
             apiClient.SetBearerToken(tokenResponse.AccessToken);
 
-            HttpResponseMessage response = await apiClient.GetAsync("https://localhost:6001/api/identity");
+            Uri requestUri = new("https://localhost:6001/api/identity");
+            HttpResponseMessage response = await apiClient.GetAsync(requestUri);
 
             if (!response.IsSuccessStatusCode)
             {
-                Console.WriteLine("Respone status code from API: {statusCode}", response.StatusCode);
+                Console.WriteLine($"Respone status code from API: {response.StatusCode}");
             }
             else
             {

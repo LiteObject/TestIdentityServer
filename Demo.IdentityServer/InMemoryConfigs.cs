@@ -9,7 +9,7 @@ namespace Demo.IdentityServer
     /// <summary>
     /// The in memory configurations.
     /// </summary>
-    public class InMemoryConfigs
+    public static class InMemoryConfigs
     {
         /// <summary>
         /// The identity resources.

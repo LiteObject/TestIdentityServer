@@ -1,18 +1,32 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>aspnet-Demo.Api-7A035F68-B909-4152-8436-662D42792A36</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<UserSecretsId>aspnet-Demo.Api-7A035F68-B909-4152-8436-662D42792A36</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<!--<AnalysisMode>All</AnalysisMode>-->
+		<AnalysisMode>Recommended</AnalysisMode>
+		<AnalysisModeSecurity>All</AnalysisModeSecurity>
+		<AnalysisModePerformance>All</AnalysisModePerformance>
+		<AnalysisModeReliability>All</AnalysisModeReliability>
+		<AnalysisModeDesign>All</AnalysisModeDesign>
+		<AnalysisModeMaintainability>All</AnalysisModeMaintainability>
+		<AnalysisModeUsage>All</AnalysisModeUsage>
+		<AnalysisModeNaming>All</AnalysisModeNaming>
+		<AnalysisModeStyle>All</AnalysisModeStyle>
+		<AnalysisModeSingleFile>All</AnalysisModeSingleFile>
+		<AnalysisModeDocumentation>All</AnalysisModeDocumentation>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.14" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.14" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="1.1.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.1" />
+		<PackageReference Include="Microsoft.Identity.Web" Version="2.0.8-preview" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+	</ItemGroup>
 
 </Project>

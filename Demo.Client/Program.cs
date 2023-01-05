@@ -1,18 +1,18 @@
-﻿namespace Demo.Client
-{
-    using IdentityModel.Client;
-    using System;
-    using System.Net.Http;
-    using System.Threading.Tasks;
+﻿using IdentityModel.Client;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
+namespace Demo.Client
+{
     internal class Program
     {
         static async Task Main(string[] args)
         {
-            using var identityServiceClient = new HttpClient();
+            using HttpClient identityServiceClient = new();
 
             // To retrieve the discovery document from IdentityService:
-            var disco = await identityServiceClient.GetDiscoveryDocumentAsync(
+            DiscoveryDocumentResponse disco = await identityServiceClient.GetDiscoveryDocumentAsync(
                 new DiscoveryDocumentRequest
                 {
                     Address = "https://localhost:5001",
@@ -29,7 +29,7 @@
             }
 
             // To retrieve JWT token from IdentityService:
-            var tokenResponse = await identityServiceClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+            TokenResponse tokenResponse = await identityServiceClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
                 Address = disco.TokenEndpoint,
                 ClientId = "client",
@@ -44,10 +44,10 @@
 
             Console.WriteLine($"JWT: {tokenResponse.Json}");
 
-            using var apiClient = new HttpClient();
+            using HttpClient apiClient = new();
             apiClient.SetBearerToken(tokenResponse.AccessToken);
 
-            var response = await apiClient.GetAsync("https://localhost:6001/api/identity");
+            HttpResponseMessage response = await apiClient.GetAsync("https://localhost:6001/api/identity");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -55,7 +55,7 @@
             }
             else
             {
-                var content = await response.Content.ReadAsStringAsync();
+                string content = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(content);
             }
         }

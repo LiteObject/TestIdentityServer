@@ -5,7 +5,6 @@ using Microsoft.Identity.Web.Resource;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Demo.Api.Controllers
 {
@@ -34,7 +33,7 @@ namespace Demo.Api.Controllers
         {
             HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
 
-            var rng = new Random();
+            Random rng = new();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),

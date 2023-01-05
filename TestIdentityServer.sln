@@ -11,6 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.IdentityServer", "Demo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{990D85A0-CBE7-409D-82A5-81B361D92ECC}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		docker-compose.yml = docker-compose.yml
 		README.md = README.md
 	EndProjectSection

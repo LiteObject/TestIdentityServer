@@ -23,12 +23,7 @@ namespace Demo.Api.Controllers
             _logger.LogDebug($"{nameof(Get)} has been invoked.");
             var claims = from c in User.Claims select new { c.Type, c.Value };
 
-            if (claims.Any())
-            {
-                return Ok(claims);
-            }
-
-            return NotFound();
+            return claims.Any() ? Ok(claims) : NotFound();
         }
     }
 }

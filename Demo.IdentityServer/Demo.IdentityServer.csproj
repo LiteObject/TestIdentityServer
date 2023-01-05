@@ -1,15 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<!--<AnalysisMode>All</AnalysisMode>-->
+		<AnalysisMode>Recommended</AnalysisMode>
+		<AnalysisModeSecurity>All</AnalysisModeSecurity>
+		<AnalysisModePerformance>All</AnalysisModePerformance>
+		<AnalysisModeReliability>All</AnalysisModeReliability>
+		<AnalysisModeDesign>All</AnalysisModeDesign>
+		<AnalysisModeMaintainability>All</AnalysisModeMaintainability>
+		<AnalysisModeUsage>All</AnalysisModeUsage>
+		<AnalysisModeNaming>All</AnalysisModeNaming>
+		<AnalysisModeStyle>All</AnalysisModeStyle>
+		<AnalysisModeSingleFile>All</AnalysisModeSingleFile>
+		<AnalysisModeDocumentation>All</AnalysisModeDocumentation>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="IdentityServer4" Version="4.1.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="TestIdentityServer\bin\**" />
+		<Compile Remove="TestIdentityServer\obj\**" />
+		<Content Remove="TestIdentityServer\bin\**" />
+		<Content Remove="TestIdentityServer\obj\**" />
+		<EmbeddedResource Remove="TestIdentityServer\bin\**" />
+		<EmbeddedResource Remove="TestIdentityServer\obj\**" />
+		<None Remove="TestIdentityServer\bin\**" />
+		<None Remove="TestIdentityServer\obj\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Certificates\" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="IdentityServer4" Version="4.1.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Certificates\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\.editorconfig" Link=".editorconfig" />
+	</ItemGroup>
 
 </Project>

@@ -1,11 +1,11 @@
-﻿namespace TestIdentityServer
-{
-    using IdentityServer4;
-    using IdentityServer4.Models;
-    using IdentityServer4.Test;
-    using System.Collections.Generic;
-    using System.Security.Claims;
+﻿using IdentityServer4;
+using IdentityServer4.Models;
+using IdentityServer4.Test;
+using System.Collections.Generic;
+using System.Security.Claims;
 
+namespace Demo.IdentityServer
+{
     /// <summary>
     /// The in memory configurations.
     /// </summary>

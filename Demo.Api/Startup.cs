@@ -22,9 +22,9 @@ namespace Demo.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            _ = services.AddControllers();
 
-            services.AddSwaggerGen(c =>
+            _ = services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo.Api", Version = "v1" });
             });
@@ -32,7 +32,7 @@ namespace Demo.Api
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             //    .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            _ = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
                     options.Authority = "https://localhost:5001";
@@ -49,22 +49,22 @@ namespace Demo.Api
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Demo.Api v1"));
+                _ = app.UseDeveloperExceptionPage();
+                _ = app.UseSwagger();
+                _ = app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Demo.Api v1"));
                 IdentityModelEventSource.ShowPII = true;
             }
 
-            app.UseHttpsRedirection();
+            _ = app.UseHttpsRedirection();
 
-            app.UseRouting();
+            _ = app.UseRouting();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            _ = app.UseAuthentication();
+            _ = app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            _ = app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                _ = endpoints.MapControllers();
             });
         }
     }

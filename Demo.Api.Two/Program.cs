@@ -81,8 +81,8 @@ namespace Demo.Api.Two
             // OPTIONA #2: Named (local) policy to decorate individual controllers and actions ([Authorize("demoapi.weatherforecast.read")])
             _ = builder.Services.AddAuthorization(options =>
             {
-                options.AddPolicy("read-policy", policy => policy.RequireClaim("scope", "demoapi.one.read"));
-                options.AddPolicy("write-policy", policy => policy.RequireClaim("scope", "demoapi.one.write"));
+                options.AddPolicy("read-policy", policy => policy.RequireClaim("scope", "demoapi.two.read"));
+                options.AddPolicy("write-policy", policy => policy.RequireClaim("scope", "demoapi.two.write"));
             });
 
             var app = builder.Build();

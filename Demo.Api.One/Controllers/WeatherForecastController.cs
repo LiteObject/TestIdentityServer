@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Demo.Api.Controllers
+namespace Demo.Api.One.Controllers
 {
     [Authorize]
     [ApiController]

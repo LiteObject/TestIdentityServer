@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-namespace Demo.Api
+namespace Demo.Api.One
 {
     public class Startup
     {

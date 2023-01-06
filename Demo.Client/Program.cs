@@ -9,6 +9,8 @@ namespace Demo.Client
     {
         public static async Task Main()
         {
+            Console.Title = "Console Client";
+
             using HttpClient identityServiceClient = new();
 
             using DiscoveryDocumentRequest discoveryDocumentRequest = new()

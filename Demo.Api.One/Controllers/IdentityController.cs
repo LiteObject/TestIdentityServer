@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 
-namespace Demo.Api.Controllers
+namespace Demo.Api.One.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
@@ -14,7 +14,7 @@ namespace Demo.Api.Controllers
 
         public IdentityController(ILogger<WeatherForecastController> logger)
         {
-            this._logger = logger;
+            _logger = logger;
         }
 
         [HttpGet]

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Linq;
 
 namespace Demo.IdentityServer
@@ -9,6 +10,9 @@ namespace Demo.IdentityServer
     {
         public static void Main(string[] args)
         {
+
+            Console.Title = "IdentityServer";
+
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
             // .AddSigningCredential(new X509Certificate2(@".\certificates\test.pfx", "password"))

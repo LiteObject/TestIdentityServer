@@ -68,7 +68,7 @@ namespace Demo.Api.One.Controllers
                 Uri requestUri = new("https://localhost:7001/WeatherForecast");
                 HttpResponseMessage response = await apiClient.GetAsync(requestUri);
 
-                if (!response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine($"Respone status code from API: {response.StatusCode}");
                     result = JsonConvert.DeserializeObject<List<WeatherForecast>>(response.Content.ReadAsStringAsync().Result);

@@ -78,7 +78,14 @@ namespace Demo.Api.One.Controllers
                     string content = await response.Content.ReadAsStringAsync();
                     Console.WriteLine(content);
 
-                    return StatusCode(StatusCodes.Status500InternalServerError, content);
+                    ProblemDetails problemDetails = new()
+                    {
+                        Title = "Failed to call API TWO",
+                        Status = (int)response.StatusCode,
+                        Detail = content
+                    };
+
+                    return StatusCode(StatusCodes.Status500InternalServerError, problemDetails);
                 }
             }
             catch (Exception ex)

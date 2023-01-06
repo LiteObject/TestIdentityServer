@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "Demo.Api.One": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:6001;http://localhost:6000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+    //"Docker": {
+    //  "commandName": "Docker",
+    //  "launchBrowser": true,
+    //  "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+    //  "publishAllPorts": true,
+    //  "useSSL": true
+    //}
+  }
+}

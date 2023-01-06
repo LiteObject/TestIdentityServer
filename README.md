@@ -60,3 +60,17 @@ sequenceDiagram
     Api-->>Client: 6. Yes, you can access the endpoint
 
 ```
+---
+## Request token from Postman:
+```
+POST /connect/token HTTP/1.1
+Host: localhost:5001
+Content-Type: application/x-www-form-urlencoded
+ 
+client_id=my-console-client&client_secret=secret&grant_type=client_credentials&scope=demoapi.one.read
+```
+
+## View all OpenId configuration:
+```
+https://localhost:5001/.well-known/openid-configuration
+```

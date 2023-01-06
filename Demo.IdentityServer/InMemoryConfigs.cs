@@ -86,9 +86,9 @@ namespace Demo.IdentityServer
                             },
                            new ApiResource()
                            {
-                                Name = "DemoUserApi",
-                                DisplayName = "DemoApi-User-Service",
-                                Description = "This is a demo api to provide user information",
+                                Name = "DemoApiTwo",
+                                DisplayName = "Demo-Api-Two",
+                                Description = "This is the Demo Api Two to provide backend weather information",
                                 ApiSecrets = { new Secret("api-secret".Sha256()) },
                                 /*
                                 *  List of associated user claims that should be included when this resource is requested.
@@ -104,7 +104,7 @@ namespace Demo.IdentityServer
                                 * 
                                 * Scopes this API resource allows
                                 */
-                                Scopes = new[] { "demoapi.user.read", "demoapi.user.write" },
+                                Scopes = new[] { "demoapi.two.read", "demoapi.two.write" },
                            },
                        };
         }
@@ -118,8 +118,8 @@ namespace Demo.IdentityServer
             {
                 new ApiScope("demoapi.one.read", "Read API One"),
                 new ApiScope("demoapi.one.write", "Write API One"),
-                new ApiScope("demoapi.user.read", "Write User API"),
-                new ApiScope("demoapi.user.write", "Write User API"),
+                new ApiScope("demoapi.two.read", "Read API Two"),
+                new ApiScope("demoapi.two.write", "Write API Two"),
             };
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace Demo.IdentityServer
                             },
                            new Client {
                             ClientId = "my-console-client",
-                            ClientName = "DemoApiOneClient",
+                            ClientName = "DemoApiOneTwoClient",
                             Description = "This client interacts with the Weather API (aka Demo Api One) and provides weather forecast",
                             AllowedGrantTypes = GrantTypes.ClientCredentials,
                             ClientSecrets = {
@@ -185,8 +185,8 @@ namespace Demo.IdentityServer
                                    IdentityServerConstants.StandardScopes.Email,
                                    "demoapi.one.read",
                                    "demoapi.one.write",
-                                   "demoapi.user.read",
-                                   "demoapi.user.write"
+                                   "demoapi.two.read",
+                                   "demoapi.two.write"
                             }
                            }
                        };

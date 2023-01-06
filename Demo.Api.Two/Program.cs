@@ -9,6 +9,8 @@ namespace Demo.Api.Two
     {
         public static void Main(string[] args)
         {
+            Console.Title = "Demo.Api.Two";
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.

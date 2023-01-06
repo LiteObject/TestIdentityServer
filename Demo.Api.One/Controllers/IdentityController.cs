@@ -6,7 +6,7 @@ using System.Linq;
 namespace Demo.Api.One.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class IdentityController : ControllerBase
     {
@@ -14,7 +14,7 @@ namespace Demo.Api.One.Controllers
 
         public IdentityController(ILogger<WeatherForecastController> logger)
         {
-            _logger = logger;
+            this._logger = logger;
         }
 
         [HttpGet]

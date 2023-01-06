@@ -34,35 +34,43 @@ namespace Demo.Client
             using ClientCredentialsTokenRequest clientCredentialsTokenRequest = new()
             {
                 Address = disco.TokenEndpoint,
-                ClientId = "client",
+                ClientId = "my-console-client",
                 ClientSecret = "secret",
-                // Scope = "openid"
+                Scope = "demoapi.one.read"
             };
 
             // To retrieve JWT token from IdentityService:
             TokenResponse tokenResponse = await identityServiceClient.RequestClientCredentialsTokenAsync(clientCredentialsTokenRequest);
 
-            if (tokenResponse.IsError)
-            {
-                Console.WriteLine(tokenResponse.Error);
-            }
-
             Console.WriteLine($"JWT: {tokenResponse.Json}");
 
-            using HttpClient apiClient = new();
-            apiClient.SetBearerToken(tokenResponse.AccessToken);
-
-            Uri requestUri = new("https://localhost:6001/api/identity");
-            HttpResponseMessage response = await apiClient.GetAsync(requestUri);
-
-            if (!response.IsSuccessStatusCode)
+            if (tokenResponse.IsError)
             {
-                Console.WriteLine($"Respone status code from API: {response.StatusCode}");
+                Console.Error.WriteLine(tokenResponse.Error);
+                return;
             }
-            else
+
+            try
             {
-                string content = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(content);
+                using HttpClient apiClient = new();
+                apiClient.SetBearerToken(tokenResponse.AccessToken);
+
+                Uri requestUri = new("https://localhost:6001/WeatherForecast");
+                HttpResponseMessage response = await apiClient.GetAsync(requestUri);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Respone status code from API: {response.StatusCode}");
+                }
+                else
+                {
+                    string content = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(content);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message, ex);
             }
         }
     }

@@ -26,7 +26,6 @@ namespace Demo.IdentityServer
                 .AddInMemoryApiScopes(InMemoryConfigs.ApiScopes)
                 .AddTestUsers(InMemoryConfigs.Users().ToList());
 
-
             WebApplication app = builder.Build();
 
             if (app.Environment.IsDevelopment())

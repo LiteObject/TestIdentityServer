@@ -24,6 +24,24 @@ namespace Demo.Api.Two.Controllers
         [Authorize("read-policy")]
         public IEnumerable<WeatherForecast> Get()
         {
+            // HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
+
+            var claims = from c in User.Claims select new { c.Type, c.Value };
+
+            foreach (var c in claims)
+            {
+                Console.WriteLine($"{c.Type}, {c.Value}");
+
+                /*
+                 * nbf - stands for not before.
+                 * exp - stands for expiry.
+                 * iss - stands for issuer.
+                 * aud - stands for audience. The resource name in which a client is needed to access.
+                 * client_id - the client id of the client application requesting the token.
+                 * scope - the scope in which a client is allowed to access.
+                 */
+            }
+
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),

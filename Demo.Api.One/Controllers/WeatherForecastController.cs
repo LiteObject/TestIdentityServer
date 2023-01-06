@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using IdentityModel.Client;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Demo.Api.One.Controllers
@@ -31,7 +36,7 @@ namespace Demo.Api.One.Controllers
         [HttpGet]
         [Authorize("read-policy")]
         // [RequiredScope(scopeRequiredByApi)]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<IActionResult> Get()
         {
             // HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
 
@@ -51,14 +56,38 @@ namespace Demo.Api.One.Controllers
                  */
             }
 
-            Random rng = new();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            List<WeatherForecast> result = new();
+
+            try
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                string bearerToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+
+                using HttpClient apiClient = new();
+                apiClient.SetBearerToken(bearerToken);
+
+                Uri requestUri = new("https://localhost:7001/WeatherForecast");
+                HttpResponseMessage response = await apiClient.GetAsync(requestUri);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Respone status code from API: {response.StatusCode}");
+                    result = JsonConvert.DeserializeObject<List<WeatherForecast>>(response.Content.ReadAsStringAsync().Result);
+                }
+                else
+                {
+                    string content = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(content);
+
+                    return StatusCode(StatusCodes.Status500InternalServerError, content);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+            return Ok(result);
         }
 
         [HttpPost]
